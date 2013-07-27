@@ -1,0 +1,5 @@
+cron:
+- description: update check
+  url: /update_status
+  schedule: every 1 minutes
+  target: version-1

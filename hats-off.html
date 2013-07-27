@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Hats-off</title>
+  </head>
+  <body bgcolor="#FFFFFF">
+    <h1>HATSOFF - Home Automation Through Syncing Of Facebook</h1>
+    <hr>
+    <br>
+    <fb:login-button autologoutlink="true" scope="user_status" size="large" show-faces=true></fb:login-button>
+
+    {% if current_user %}
+      <p>
+        <font size=5>Hello, {{ current_user.name|escape }}</font> <br> 
+        <font size=4>Your device is currently switched {{ state }}</font><br>
+        <font size=4>Your User ID is {{ current_user.id}} (Paste it in the user end application)</font>
+      </p>
+    {% else %}
+      <p align="justify">
+        "H.A.T.S.of.F." aims for wireless control of electrical appliances using Facebook. Currently we are using the user's Facebook Status Updates to control<br>
+        the appliances, for example if the user's status update says "on" then the appliance will get switched on. This will also require some hardware components<br>connected to the appliances. Don't worry if you don't have the hardware components, you can still look at all your facebook statuses by clicking a <br>button after you login. Please don't hesitate to login with Facebook because we will not be getting your passwords and we won't be posting anything on <br>
+        your behalf. This project is still under development, we will be adding more features as soon as possible. 
+      </p>
+    {% endif %}
+
+    <div id="fb-root"></div>
+    
+    {% if current_user %}
+	    <div>
+		   <form method="post">
+		   <br>
+       <font size=4>To view your status updates click on the button.</font>
+		   <input type="submit" value = "Status Updates">
+		   </form>
+	    </div>
+    {% endif %}
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({appId: '{{ facebook_app_id }}', status: true, cookie: true,
+                 xfbml: true});
+        FB.Event.subscribe('{% if current_user %}auth.logout{% else %}auth.login{% endif %}', function(response) {
+          {% if current_user %} window.location = "/logout" {% else %} window.location.reload(); {% endif %}
+        });
+      };
+      (function() {
+        var e = document.createElement('script');
+        e.type = 'text/javascript';
+        e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+        e.async = true;
+        document.getElementById('fb-root').appendChild(e);
+      }());
+    </script>
+  </body>
+</html>
